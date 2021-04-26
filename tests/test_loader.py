@@ -41,4 +41,4 @@ class TestLoader(TestCase):
         """
         loader = Loader('')
         loader.data = [0, 1, 2]
-        self.assertEqual(loader.data, [0, 1, 2])
+        self.assertEqual(loader.get_data(), [0, 1, 2])
