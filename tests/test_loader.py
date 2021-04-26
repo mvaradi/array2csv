@@ -14,28 +14,18 @@ class TestLoader(TestCase):
         loader.load_file()
         self.assertIsNotNone(loader.data)
 
-    def test_set_identifier(self):
-        """
-        Test if the loader can process the file path and get the identifier from it
-        :return: None
-        """
-        loader = Loader('path/to/file/identifier_example.npz')
-        loader.set_identifier()
-        self.assertEqual(loader.identifier, 'identifier')
-
     def test_get_identifier(self):
         """
         Test if the loader returns the identifier correctly
         :return: None
         """
-        loader = Loader('')
-        loader.identifier = 'foo'
-        self.assertEqual(loader.get_identifier(), 'foo')
+        loader = Loader('/path/to/data/identifier_example.npz')
+        self.assertEqual(loader.get_identifier(), 'identifier')
 
     def test_get_range(self):
         """
         Test if the loader can correctly extract the minimum and maximum values from the data
-        :return:
+        :return: None
         """
         loader = Loader('./tests/example.npz')
         loader.load_file()
@@ -43,3 +33,12 @@ class TestLoader(TestCase):
         print(type(data_range[0]))
         self.assertEqual(np.float16(2.156), data_range[0])
         self.assertEqual(np.float16(21.94), data_range[1])
+
+    def test_get_data(self):
+        """
+        Test if the loader can return the data
+        :return: None
+        """
+        loader = Loader('')
+        loader.data = [0, 1, 2]
+        self.assertEqual(loader.data, [0, 1, 2])

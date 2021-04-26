@@ -11,7 +11,6 @@ class Loader(object):
     def __init__(self, path):
         self.path = path
         self.data = None
-        self.identifier = None
 
     def load_file(self):
         """
@@ -26,7 +25,14 @@ class Loader(object):
         archive = load(self.path)
         self.data = archive[archive.files[0]][0]
 
-    def set_identifier(self):
+    def get_data(self):
+        """
+        Get the data
+        :return: Numpy array of arrays
+        """
+        return self.data
+
+    def get_identifier(self):
         """
         Sets the identifier attribute
 
@@ -35,14 +41,7 @@ class Loader(object):
 
         :return: None
         """
-        self.identifier = ntpath.basename(self.path).split('_')[0]
-
-    def get_identifier(self):
-        """
-        Gets the identifier
-        :return: String
-        """
-        return self.identifier
+        return ntpath.basename(self.path).split('_')[0]
 
     def get_range(self):
         """

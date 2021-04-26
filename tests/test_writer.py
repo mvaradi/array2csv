@@ -8,7 +8,7 @@ class TestWriter(TestCase):
     def test_get_length(self):
         """
         Test if the writer can get the dimension of the data matrix
-        :return:
+        :return: None
         """
         writer = Writer([0, 1, 2], "id")
         self.assertEqual(writer._get_length(), 3)
@@ -16,7 +16,7 @@ class TestWriter(TestCase):
     def test_save(self):
         """
         Test if the writer correctly writes out the data
-        :return:
+        :return: None
         """
         write = Writer([[0, 1], [2, 3]], 'id')
         write.save()

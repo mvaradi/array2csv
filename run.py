@@ -17,8 +17,7 @@ if __name__ == "__main__":
         # Load a file
         loader = Loader(npz_file)
         loader.load_file()
-        loader.set_identifier()
 
         # Save the data to CSV
-        writer = Writer(loader.data, loader.get_identifier())
+        writer = Writer(loader.get_data(), loader.get_identifier())
         writer.save()
