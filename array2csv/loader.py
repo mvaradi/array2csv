@@ -1,4 +1,8 @@
+# TODO Add tests
+
 import sys
+import ntpath
+
 from numpy import load, amin, amax
 
 
@@ -7,6 +11,7 @@ class Loader(object):
     def __init__(self, path):
         self.path = path
         self.data = None
+        self.identifier = None
 
     def load_file(self):
         """
@@ -21,6 +26,24 @@ class Loader(object):
         archive = load(self.path)
         self.data = archive[archive.files[0]][0]
 
+    def set_identifier(self):
+        """
+        Sets the identifier attribute
+
+        The input file name is expected to be in the format of [identifier]_[*]+.npz
+        For example: identifier_example.npz
+
+        :return: None
+        """
+        self.identifier = ntpath.basename(self.path).split('_')[0]
+
+    def get_identifier(self):
+        """
+        Gets the identifier
+        :return: String
+        """
+        return self.identifier
+
     def get_range(self):
         """
         Gets the minimum and maximum values from the data array-of-arrays
@@ -30,12 +53,12 @@ class Loader(object):
         return amin(self.data), amax(self.data)
 
 
-if __name__ == "__main__":
-    loader = Loader(sys.argv[1])
-    loader.load_file()
-
-    # Get data range
-    data_range = loader.get_range()
-    print("Min: %.2f" % data_range[0])
-    print("Max: %.2f" % data_range[1])
+# if __name__ == "__main__":
+#     loader = Loader(sys.argv[1])
+#     loader.load_file()
+#
+#     # Get data range
+#     data_range = loader.get_range()
+#     print("Min: %.2f" % data_range[0])
+#     print("Max: %.2f" % data_range[1])
 
