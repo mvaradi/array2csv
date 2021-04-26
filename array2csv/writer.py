@@ -1,5 +1,3 @@
-# TODO Add tests
-
 import csv
 
 

@@ -1,3 +1,4 @@
+import sys
 import glob
 
 from array2csv.loader import Loader
@@ -12,7 +13,7 @@ if __name__ == "__main__":
     """
     Loops through all the .npz files in a path
     """
-    for npz_file in glob.glob("./data/*.npz"):
+    for npz_file in glob.glob(sys.argv[1] + "*.npz"):
 
         # Load a file
         loader = Loader(npz_file)

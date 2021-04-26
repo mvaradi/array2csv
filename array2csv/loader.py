@@ -1,5 +1,3 @@
-# TODO Add tests
-
 import sys
 import ntpath
 
