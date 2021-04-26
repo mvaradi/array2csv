@@ -9,7 +9,7 @@ class Writer(object):
         self.data = data
         self.id = identifier
 
-    def get_length(self):
+    def _get_length(self):
         """
         Get the length of the data array
 
@@ -23,7 +23,7 @@ class Writer(object):
 
         :return: None
         """
-        n = self.get_length()
+        n = self._get_length()
         with open("%s_distogram.csv" % self.id, "w", newline='') as csv_output:
             writer = csv.writer(csv_output)
             # These are the expected headers

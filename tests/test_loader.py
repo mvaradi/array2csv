@@ -5,9 +5,6 @@ from array2csv.loader import Loader
 
 class TestLoader(TestCase):
 
-    # def setUp(self):
-    #     self.loader = Loader('')
-
     def test_load_file(self):
         """
         Tests if the loader can parse an example input file
