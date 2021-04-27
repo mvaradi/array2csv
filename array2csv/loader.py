@@ -2,7 +2,6 @@ import sys
 import ntpath
 
 import numpy as np
-# from numpy import load, amin, amax, ceil
 
 
 class Loader(object):
@@ -110,6 +109,12 @@ class Loader(object):
         return self.make_aggregated_matrix(data, iterations)
 
     def make_aggregated_matrix(self, data, iterations):
+        """
+        This method makes an n x n matrix from the input data array
+        :param data: Numpy array
+        :param iterations: Number, the number of iterations provided by get_number_of_iterations()
+        :return: Numpy array
+        """
         dimension = int(np.sqrt(iterations))
         return np.array(data).reshape(dimension, dimension)
 
