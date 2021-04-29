@@ -108,6 +108,26 @@ class Loader(object):
                 y += 2
         return self.make_aggregated_matrix(data, iterations)
 
+    def as_submatrices(self, x, rows, cols=None, writeable=False):
+        from numpy.lib.stride_tricks import as_strided
+        if cols is None: cols = rows
+        x = np.asarray(x)
+        x_rows, x_cols = x.shape
+        s1, s2 = x.strides
+        if x_rows % rows != 0 or x_cols % cols != 0:
+            raise ValueError('Invalid dimensions.')
+        out_shape = (x_rows // rows, x_cols // cols, rows, cols)
+        out_strides = (s1 * rows, s2 * cols, s1, s2)
+        return as_strided(x, out_shape, out_strides, writeable=writeable)
+
+    def sum_submatrices(self, x, rows, cols=None):
+        if cols is None: cols = rows
+        x = np.asarray(x)
+        x_sub = self.as_submatrices(x, rows, cols)
+        x_sum = np.mean(x_sub, axis=(2, 3))
+        x_rows, x_cols = x.shape
+        return np.repeat(np.repeat(x_sum, rows, axis=0), cols, axis=1)
+
     def make_aggregated_matrix(self, data, iterations):
         """
         This method makes an n x n matrix from the input data array
@@ -119,12 +139,17 @@ class Loader(object):
         return np.array(data).reshape(dimension, dimension)
 
 
-# if __name__ == "__main__":
-#     loader = Loader(sys.argv[1])
-#     loader.load_file()
-#
-#     # Get data range
-#     data_range = loader.get_range()
-#     print("Min: %.2f" % data_range[0])
-#     print("Max: %.2f" % data_range[1])
+if __name__ == "__main__":
+    # loader = Loader(sys.argv[1])
+    # loader.load_file()
+    #
+    # # Get data range
+    # data_range = loader.get_range()
+    # print("Min: %.2f" % data_range[0])
+    # print("Max: %.2f" % data_range[1])
 
+    loader = Loader("")
+    x = np.arange(64).reshape((8, 8))
+    print(x)
+    print()
+    print(loader.sum_submatrices(x, 4))
