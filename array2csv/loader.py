@@ -1,3 +1,6 @@
+# TODO Change matrix writer method for means (to create smaller matrix)
+# TODO Deal with cases when the matrix is not the right size for the window
+
 import sys
 import ntpath
 
