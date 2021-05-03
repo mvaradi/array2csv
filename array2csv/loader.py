@@ -1,5 +1,6 @@
 # TODO Change matrix writer method for means (to create smaller matrix)
 # TODO Deal with cases when the matrix is not the right size for the window
+    # Remove the last element if needed
 
 import sys
 import ntpath
@@ -124,11 +125,21 @@ class Loader(object):
         return as_strided(x, out_shape, out_strides, writeable=writeable)
 
     def sum_submatrices(self, x, rows, cols=None):
+        """
+        Calculate the sum over a window in a matrix
+
+        :param x: Numpy array (matrix)
+        :param rows: Number; the size of the window in terms of rows
+        :param cols: Number; the size of the window in terms of colums
+        :return: Numpy array (matrix); same size as x
+        """
         if cols is None: cols = rows
         x = np.asarray(x)
         x_sub = self.as_submatrices(x, rows, cols)
         x_sum = np.mean(x_sub, axis=(2, 3))
         x_rows, x_cols = x.shape
+        # TODO calculate the dimensions of the output matrix
+        # print(x.shape)
         return np.repeat(np.repeat(x_sum, rows, axis=0), cols, axis=1)
 
     def make_aggregated_matrix(self, data, iterations):
