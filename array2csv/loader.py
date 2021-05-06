@@ -6,6 +6,7 @@ import sys
 import ntpath
 
 import numpy as np
+from numpy.lib.stride_tricks import as_strided
 
 
 class Loader(object):
@@ -113,11 +114,21 @@ class Loader(object):
         return self.make_aggregated_matrix(data, iterations)
 
     def as_submatrices(self, x, rows, cols=None, writeable=False):
-        from numpy.lib.stride_tricks import as_strided
+        """
+        Create sub-matrices from an input Numpy array-of-arrays (i.e. matrix)
+        It uses "rows" and "cols" to set the window size for getting the sub-matrices
+
+        :param x: Numpy array (matrix)
+        :param rows: Number; the size of the window in terms of rows
+        :param cols: Number; the size of the window in terms of colums
+        :param writeable: Boolean; seems to be required by "as_strided()"
+        :return: Numpy array of sub-matrices
+        """
         if cols is None: cols = rows
         x = np.asarray(x)
         x_rows, x_cols = x.shape
         s1, s2 = x.strides
+        # TODO deal with scenarios where the dimensions are incorrect
         if x_rows % rows != 0 or x_cols % cols != 0:
             raise ValueError('Invalid dimensions.')
         out_shape = (x_rows // rows, x_cols // cols, rows, cols)
@@ -136,11 +147,13 @@ class Loader(object):
         if cols is None: cols = rows
         x = np.asarray(x)
         x_sub = self.as_submatrices(x, rows, cols)
+        print(x_sub)
         x_sum = np.mean(x_sub, axis=(2, 3))
         x_rows, x_cols = x.shape
         # TODO calculate the dimensions of the output matrix
         # print(x.shape)
-        return np.repeat(np.repeat(x_sum, rows, axis=0), cols, axis=1)
+        return x_sum
+        # return np.repeat(np.repeat(x_sum, rows, axis=0), cols, axis=1)
 
     def make_aggregated_matrix(self, data, iterations):
         """
@@ -166,4 +179,8 @@ if __name__ == "__main__":
     x = np.arange(64).reshape((8, 8))
     print(x)
     print()
-    print(loader.sum_submatrices(x, 4))
+    print(loader.sum_submatrices(x, 2))
+
+# x < 300 => nothing
+# x < 600 => window 2
+# 150 => 300 => 600 => 1200 => 2400 => 4800 => 9600
