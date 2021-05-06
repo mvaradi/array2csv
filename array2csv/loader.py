@@ -14,6 +14,7 @@ class Loader(object):
     def __init__(self, path):
         self.path = path
         self.data = None
+        self.tiled_data = None
 
     def load_file(self):
         """
@@ -54,17 +55,7 @@ class Loader(object):
         """
         return np.amin(self.data), np.amax(self.data)
 
-    def get_number_of_iterations(self, window):
-        """
-        This method calculates the number of iterations required by the create_aggregated_data() method
-        :param window: Number, window size
-        :return: Number
-        """
-        dimension = len(self.data)
-        number_of_iterations = np.square(np.ceil(dimension / window))
-        return number_of_iterations
-
-    def create_aggregated_data(self, window_size):
+    def create_tiled_data(self):
         """
         This method takes an input n x n numpy array-of-arrays (i.e. matrix) and creates a new matrix
         that has the average or an i x i size slice matrix in a new matrix
@@ -74,44 +65,17 @@ class Loader(object):
         output with a window of 2x2 = [[1.5]]
         :return: Numpy array of arrays
         """
-
-        """
-        Get the number of iterations needed to slide a window through the matrix
-        The window first moves through a row (from left to right) and then goes
-        down and starts again at the beginning of the row
-        """
-        iterations = self.get_number_of_iterations(window_size)
-        x = 0
-        y = 0
-        data = []
-        for i in range(int(iterations)):
-            values = []
-            values.append(self.data[x][y])
-            if y+1 < len(self.data[x]):
-                values.append(self.data[x][y+1])
-            if x+1 < len(self.data):
-                values.append(self.data[x+1][y])
-            if x + 1 < len(self.data) and y+1 < len(self.data[x+1]):
-                values.append(self.data[x+1][y+1])
-            data.append(np.mean(values))
-
-            if y + 2 > len(self.data[x]) - 1:
-                if y + 1 > len(self.data[x]) - 1:
-                    # The window reached the end of the row, so rewind it to 0
-                    y = 0
-                    if x + 2 > len(self.data) - 1:
-                        if x + 1 > len(self.data) - 1:
-                            # The window reached the end of the bottom row, so end the loop
-                            break
-                        else:
-                            x += 1
-                    else:
-                        x += 2
-                else:
-                    y += 1
-            else:
-                y += 2
-        return self.make_aggregated_matrix(data, iterations)
+        data = self.data
+        tiled_data = [data]
+        while len(data) > 300:
+            dimension = data.shape[0]
+            if dimension % 2 != 0:
+                trimmed_data = data[0:len(data)-1, 0:len(data)-1]
+                data = trimmed_data
+            data = self.sum_submatrices(data, 2)
+            tiled_data.append(data)
+        self.tiled_data = tiled_data
+        return tiled_data
 
     def as_submatrices(self, x, rows, cols=None, writeable=False):
         """
@@ -128,8 +92,8 @@ class Loader(object):
         x = np.asarray(x)
         x_rows, x_cols = x.shape
         s1, s2 = x.strides
-        # TODO deal with scenarios where the dimensions are incorrect
         if x_rows % rows != 0 or x_cols % cols != 0:
+            print(x_rows, rows, x_cols, cols)
             raise ValueError('Invalid dimensions.')
         out_shape = (x_rows // rows, x_cols // cols, rows, cols)
         out_strides = (s1 * rows, s2 * cols, s1, s2)
@@ -144,43 +108,33 @@ class Loader(object):
         :param cols: Number; the size of the window in terms of colums
         :return: Numpy array (matrix); same size as x
         """
-        if cols is None: cols = rows
+        if cols is None:
+            cols = rows
         x = np.asarray(x)
         x_sub = self.as_submatrices(x, rows, cols)
-        print(x_sub)
         x_sum = np.mean(x_sub, axis=(2, 3))
-        x_rows, x_cols = x.shape
-        # TODO calculate the dimensions of the output matrix
-        # print(x.shape)
         return x_sum
-        # return np.repeat(np.repeat(x_sum, rows, axis=0), cols, axis=1)
-
-    def make_aggregated_matrix(self, data, iterations):
-        """
-        This method makes an n x n matrix from the input data array
-        :param data: Numpy array
-        :param iterations: Number, the number of iterations provided by get_number_of_iterations()
-        :return: Numpy array
-        """
-        dimension = int(np.sqrt(iterations))
-        return np.array(data).reshape(dimension, dimension)
 
 
 if __name__ == "__main__":
-    # loader = Loader(sys.argv[1])
-    # loader.load_file()
+    loader = Loader(sys.argv[1])
+    loader.load_file()
     #
     # # Get data range
     # data_range = loader.get_range()
     # print("Min: %.2f" % data_range[0])
     # print("Max: %.2f" % data_range[1])
 
-    loader = Loader("")
-    x = np.arange(64).reshape((8, 8))
-    print(x)
-    print()
-    print(loader.sum_submatrices(x, 2))
+    # loader = Loader("")
+    # x = np.arange(64).reshape((8, 8))
+    # print(x)
+    # print()
+    # print(loader.sum_submatrices(x, 2))
+    print(loader.create_tiled_data())
 
 # x < 300 => nothing
 # x < 600 => window 2
 # 150 => 300 => 600 => 1200 => 2400 => 4800 => 9600
+
+
+# 1153 > 576 > 288

@@ -43,21 +43,6 @@ class TestLoader(TestCase):
         loader.data = [0, 1, 2]
         self.assertEqual(loader.get_data(), [0, 1, 2])
 
-    def test_get_number_of_iterations(self):
-        """
-        Test if the loader can correctly set the number of iterations
-        :return: None
-        """
-        loader = Loader('')
-        loader.data = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
-        self.assertEqual(loader.get_number_of_iterations(2), 4)
-        loader.data = np.array([[0, 1], [2, 3]])
-        self.assertEqual(loader.get_number_of_iterations(2), 1)
-        loader.data = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
-        self.assertEqual(loader.get_number_of_iterations(3), 1)
-        loader.data = np.array([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]])
-        self.assertEqual(loader.get_number_of_iterations(2), 4)
-
     def test_create_aggregated_data(self):
         """
         Tests if the loader can aggregated data using a window size
@@ -66,17 +51,7 @@ class TestLoader(TestCase):
         loader = Loader('')
         loader.data = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
         expected = np.array([[2, 3.5], [6.5, 8]])
-        self.assertEqual(loader.create_aggregated_data(2).all(), expected.all())
+        self.assertEqual(loader.create_tiled_data(2).all(), expected.all())
         loader.data = np.array([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]])
         expected = np.array([[2.5, 4.5], [10.5, 12.5]])
-        self.assertEqual(loader.create_aggregated_data(2).all(), expected.all())
-
-    def test_make_aggregated_matrix(self):
-        """
-        Test if the loader can create a new matrix from an input array
-        :return: None
-        """
-        loader = Loader('')
-        data = [0,1,2,3]
-        result = loader.make_aggregated_matrix(data, 4)
-        self.assertEqual(result.all(), np.array([[0,1],[2,3]]).all())
+        self.assertEqual(loader.create_tiled_data(2).all(), expected.all())
