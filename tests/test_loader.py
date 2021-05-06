@@ -50,8 +50,5 @@ class TestLoader(TestCase):
         """
         loader = Loader('')
         loader.data = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
-        expected = np.array([[2, 3.5], [6.5, 8]])
-        self.assertEqual(loader.create_tiled_data(2).all(), expected.all())
-        loader.data = np.array([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]])
-        expected = np.array([[2.5, 4.5], [10.5, 12.5]])
-        self.assertEqual(loader.create_tiled_data(2).all(), expected.all())
+        expected = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
+        self.assertEqual(loader.create_tiled_data()[0].all(), expected.all())
