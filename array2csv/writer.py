@@ -1,4 +1,5 @@
 import csv
+import numpy as np
 
 
 class Writer(object):
@@ -15,7 +16,7 @@ class Writer(object):
         """
         return len(self.data)
 
-    def save(self):
+    def save_to_csv(self):
         """
         Write out the contents of the data into a CSV file
 
@@ -33,3 +34,25 @@ class Writer(object):
                     # Luckily, values >20 are meaningless in terms of usability and so can be safely removed
                     if self.data[i][j] < 20:
                         writer.writerow([i+1, j+1, "%.2f" % self.data[i][j]])
+
+    def save_to_json(self):
+        """
+        Write out the contents of the data into a CSV file
+
+        :return: None
+        """
+        with open("%s_distogram.json" % self.id, "w") as json_output:
+            json_output.write('[')
+            for i in range(len(self.data)):
+                json_output.write('[')
+                json_output.write(','.join(str(self.turn_to_zero(x)) for x in self.data[i]))
+                json_output.write(']')
+                if i < len(self.data) - 1:
+                    json_output.write(',')
+            json_output.write(']')
+
+    def turn_to_zero(self, value):
+        if value >= 21:
+            return 0
+        return value
+

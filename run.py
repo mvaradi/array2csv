@@ -21,4 +21,5 @@ if __name__ == "__main__":
 
         # Save the data to CSV
         writer = Writer(loader.get_data(), loader.get_identifier())
-        writer.save()
+        # writer.save_to_csv()
+        writer.save_to_json()
