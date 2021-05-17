@@ -1,4 +1,3 @@
-import sys
 import ntpath
 
 import numpy as np

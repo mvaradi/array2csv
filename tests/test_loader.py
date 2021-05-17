@@ -56,7 +56,6 @@ class TestLoader(TestCase):
         loader.sum_submatrices = lambda x, y: np.array([0.5, 2.5])
         self.assertEqual(loader.create_tiled_data()[1].all(), np.array([0.5, 2.5]).all())
 
-
     def test_as_submatrices(self):
         """
         Test if the correct strided matrix is returns or if error is raised
