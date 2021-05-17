@@ -1,7 +1,3 @@
-# TODO Change matrix writer method for means (to create smaller matrix)
-# TODO Deal with cases when the matrix is not the right size for the window
-    # Remove the last element if needed
-
 import sys
 import ntpath
 
@@ -10,6 +6,13 @@ from numpy.lib.stride_tricks import as_strided
 
 
 class Loader(object):
+    """
+    This class handles .npz data that has an embedded matrix-like object.
+
+    Its methods deal with loading/uncompressing Numpy .npz data objects,
+    and can also create a tiled data which is averaging values in a window
+    of the matrix (i.e. averaging values in a sub-matrix).
+    """
 
     def __init__(self, path):
         self.path = path

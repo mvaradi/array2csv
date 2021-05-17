@@ -13,6 +13,8 @@ class TestWriter(TestCase):
         writer = Writer([0, 1, 2], "id")
         self.assertEqual(writer._get_length(), 3)
 
+
+
     # def test_save(self):
     #     """
     #     Test if the writer correctly writes out the data
