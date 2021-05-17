@@ -117,33 +117,3 @@ class Loader(object):
         x_sub = self.as_submatrices(x, rows, cols)
         x_sum = np.mean(x_sub, axis=(2, 3))
         return x_sum
-
-
-if __name__ == "__main__":
-    loader = Loader(sys.argv[1])
-    loader.load_file()
-    #
-    # # Get data range
-    # data_range = loader.get_range()
-    # print("Min: %.2f" % data_range[0])
-    # print("Max: %.2f" % data_range[1])
-
-    # loader = Loader("")
-    # x = np.arange(64).reshape((8, 8))
-    # print(x)
-    # print()
-    # print(loader.sum_submatrices(x, 2))
-    # print(loader.data)
-
-    tiled_data = loader.create_tiled_data()
-
-
-
-    # print(loader.create_tiled_data())
-
-# x < 300 => nothing
-# x < 600 => window 2
-# 150 => 300 => 600 => 1200 => 2400 => 4800 => 9600
-
-
-# 1153 > 576 > 288
