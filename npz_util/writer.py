@@ -20,14 +20,21 @@ class Writer(object):
         n = len(self.data)
         for i in range(n):
             for j in range(n):
-                """
-                Only write out distance values <21
-                This is because the interactive data visualisation would break with too many data points
-                Luckily, values >21 are meaningless in terms of usability and so can be safely removed
-                """
-                if self.data[i][j] < 20:
-                    writer.writerow([i+1, j+1, "%.2f" % self.data[i][j]])
+                self.conditional_write(i, j, writer)
         csv_output.close()
+
+    def conditional_write(self, i, j, writer):
+        """
+        Only write out distance values <21
+        This is because the interactive data visualisation would break with too many data points
+        Luckily, values >21 are meaningless in terms of usability and so can be safely removed
+        :param i: Number
+        :param j: Number
+        :param writer: CSV writer
+        :return: None
+        """
+        if self.data[i][j] < 20:
+            writer.writerow([i + 1, j + 1, "%.2f" % self.data[i][j]])
 
     def save_to_tiled_json(self):
         """
@@ -85,6 +92,6 @@ class Writer(object):
         :param value: Number
         :return: Number
         """
-        if value >= 21:
+        if value >= 20:
             return 0
         return value

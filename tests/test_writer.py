@@ -12,9 +12,9 @@ class TestWriter(TestCase):
         :return: None
         """
         writer = Writer([0], "id")
-        self.assertEqual(writer.turn_to_zero(20), 20)
+        self.assertEqual(writer.turn_to_zero(19), 19)
+        self.assertEqual(writer.turn_to_zero(20), 0)
         self.assertEqual(writer.turn_to_zero(21), 0)
-        self.assertEqual(writer.turn_to_zero(22), 0)
 
     def test_save_to_csv(self):
         """
