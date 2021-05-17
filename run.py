@@ -1,11 +1,11 @@
 import sys
 import glob
 
-from array2csv.loader import Loader
-from array2csv.writer import Writer
+from npz_util.loader import Loader
+from npz_util.writer import Writer
 
 """
-This is a wrapper script that uses the Loader() and Writer() classes from the array2csv package.
+This is a wrapper script that uses the Loader() and Writer() classes from the npz_util package.
 The aim of this script is to open .npz files, parse their data, and write it out in .csv format.
 """
 

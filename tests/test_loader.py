@@ -1,6 +1,6 @@
 from unittest import TestCase
 import numpy as np
-from array2csv.loader import Loader
+from npz_util.loader import Loader
 
 
 class TestLoader(TestCase):

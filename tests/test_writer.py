@@ -1,6 +1,6 @@
 import os
 from unittest import TestCase
-from array2csv.writer import Writer
+from npz_util.writer import Writer
 
 
 class TestWriter(TestCase):
