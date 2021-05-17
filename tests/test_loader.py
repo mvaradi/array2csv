@@ -51,6 +51,11 @@ class TestLoader(TestCase):
         loader.data = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
         expected = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
         self.assertEqual(loader.create_tiled_data()[0].all(), expected.all())
+        mock_data = np.zeros((301, 301))
+        loader.data = mock_data
+        loader.sum_submatrices = lambda x, y: np.array([0.5, 2.5])
+        self.assertEqual(loader.create_tiled_data()[1].all(), np.array([0.5, 2.5]).all())
+
 
     def test_as_submatrices(self):
         """
