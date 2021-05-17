@@ -8,7 +8,7 @@ class Loader(object):
     """
     This class handles .npz data that has an embedded matrix-like object.
 
-    Its methods deal with loading/uncompressing Numpy .npz data objects,
+    Its methods deal with loading/unpacking Numpy .npz data objects,
     and can also create a tiled data which is averaging values in a window
     of the matrix (i.e. averaging values in a sub-matrix).
     """
@@ -74,23 +74,25 @@ class Loader(object):
             if dimension % 2 != 0:
                 trimmed_data = data[0:len(data)-1, 0:len(data)-1]
                 data = trimmed_data
-            data = self.sum_submatrices(data, 2)
+            data = self.sum_sub_matrices(data, 2)
             tiled_data.append(data)
         self.tiled_data = tiled_data
         return tiled_data
 
-    def as_submatrices(self, x, rows, cols=None, writeable=False):
+    @staticmethod
+    def as_sub_matrices(x, rows, cols=None, writeable=False):
         """
         Create sub-matrices from an input Numpy array-of-arrays (i.e. matrix)
         It uses "rows" and "cols" to set the window size for getting the sub-matrices
 
         :param x: Numpy array (matrix)
         :param rows: Number; the size of the window in terms of rows
-        :param cols: Number; the size of the window in terms of colums
-        :param writeable: Boolean; seems to be required by "as_strided()"
+        :param cols: Number; the size of the window in terms of columns
+        :param writeable: Boolean
         :return: Numpy array of sub-matrices
         """
-        if cols is None: cols = rows
+        if cols is None:
+            cols = rows
         x = np.asarray(x)
         x_rows, x_cols = x.shape
         s1, s2 = x.strides
@@ -101,18 +103,18 @@ class Loader(object):
         out_strides = (s1 * rows, s2 * cols, s1, s2)
         return as_strided(x, out_shape, out_strides, writeable=writeable)
 
-    def sum_submatrices(self, x, rows, cols=None):
+    def sum_sub_matrices(self, x, rows, cols=None):
         """
         Calculate the sum over a window in a matrix
 
         :param x: Numpy array (matrix)
         :param rows: Number; the size of the window in terms of rows
-        :param cols: Number; the size of the window in terms of colums
+        :param cols: Number; the size of the window in terms of columns
         :return: Numpy array (matrix); same size as x
         """
         if cols is None:
             cols = rows
         x = np.asarray(x)
-        x_sub = self.as_submatrices(x, rows, cols)
+        x_sub = self.as_sub_matrices(x, rows, cols)
         x_sum = np.mean(x_sub, axis=(2, 3))
         return x_sum

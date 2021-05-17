@@ -53,10 +53,10 @@ class TestLoader(TestCase):
         self.assertEqual(loader.create_tiled_data()[0].all(), expected.all())
         mock_data = np.zeros((301, 301))
         loader.data = mock_data
-        loader.sum_submatrices = lambda x, y: np.array([0.5, 2.5])
+        loader.sum_sub_matrices = lambda x, y: np.array([0.5, 2.5])
         self.assertEqual(loader.create_tiled_data()[1].all(), np.array([0.5, 2.5]).all())
 
-    def test_as_submatrices(self):
+    def test_as_sub_matrices(self):
         """
         Test if the correct strided matrix is returns or if error is raised
         :return: None
@@ -66,22 +66,22 @@ class TestLoader(TestCase):
         expected = np.array([[[[0, 1, 2],
                                [3, 4, 5],
                                [6, 7, 8]]]])
-        self.assertEqual(loader.as_submatrices(loader.data, 3).all(), expected.all())
+        self.assertEqual(loader.as_sub_matrices(loader.data, 3).all(), expected.all())
         with self.assertRaises(ValueError):
-            loader.as_submatrices(loader.data, 2)
+            loader.as_sub_matrices(loader.data, 2)
 
-    def test_sum_submatrices(self):
+    def test_sum_sub_matrices(self):
         loader = Loader('')
         loader.data = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
-        submatrix = np.array([[[[0, 1, 2],
+        sub_matrix = np.array([[[[0, 1, 2],
                                 [3, 4, 5],
                                 [6, 7, 8]]]])
-        loader.as_submatrices = lambda x, y, z: submatrix
-        self.assertEqual(loader.sum_submatrices(loader.data, 3), 4)
-        submatrix = np.array([[[[0, 1, 2],
+        loader.as_sub_matrices = lambda x, y, z: sub_matrix
+        self.assertEqual(loader.sum_sub_matrices(loader.data, 3), 4)
+        sub_matrix = np.array([[[[0, 1, 2],
                                 [3, 4, 5],
                                 [6, 7, 8]]],
                               [[[1, 1, 1],
                                 [1, 3, 3],
                                 [2, 3, 3]]]])
-        self.assertEqual(loader.sum_submatrices(loader.data, 3).all(), np.asarray([4, 2]).all())
+        self.assertEqual(loader.sum_sub_matrices(loader.data, 3).all(), np.asarray([4, 2]).all())
