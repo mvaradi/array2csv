@@ -1,5 +1,4 @@
 import csv
-import numpy as np
 
 
 class Writer(object):
@@ -8,32 +7,27 @@ class Writer(object):
         self.data = data
         self.id = identifier
 
-    def _get_length(self):
-        """
-        Get the length of the data array
-
-        :return: Number
-        """
-        return len(self.data)
-
     def save_to_csv(self):
         """
         Write out the contents of the data into a CSV file
 
         :return: None
         """
-        n = self._get_length()
-        with open("%s_distogram.csv" % self.id, "w", newline='') as csv_output:
-            writer = csv.writer(csv_output)
-            # These are the expected headers
-            writer.writerow(["residueA","residueB","distance"])
-            for i in range(n):
-                for j in range(n):
-                    # Only write out distance values <20
-                    # This is because the interactive data visualisation would break with too many data points
-                    # Luckily, values >20 are meaningless in terms of usability and so can be safely removed
-                    if self.data[i][j] < 20:
-                        writer.writerow([i+1, j+1, "%.2f" % self.data[i][j]])
+        csv_output = open("%s_distogram.csv" % self.id, "w", newline='')
+        writer = csv.writer(csv_output)
+        # These are the expected headers
+        writer.writerow(["residue1", "residue2", "distance"])
+        n = len(self.data)
+        for i in range(n):
+            for j in range(n):
+                """
+                Only write out distance values <21
+                This is because the interactive data visualisation would break with too many data points
+                Luckily, values >21 are meaningless in terms of usability and so can be safely removed
+                """
+                if self.data[i][j] < 20:
+                    writer.writerow([i+1, j+1, "%.2f" % self.data[i][j]])
+        csv_output.close()
 
     def save_to_tiled_json(self):
         """
@@ -51,29 +45,26 @@ class Writer(object):
                 json_output.write('[')
                 # The sub-matrixes have n x n dimensions
                 n = len(self.data[m])
+                values = []
                 for i in range(n):
-
                     for j in range(n):
                         # Only write out distance values <21
                         # This is because the interactive data visualisation would break with too many data points
                         # Luckily, values >21 are meaningless in terms of usability and so can be safely removed
                         if self.data[m][i][j] < 21:
-                            json_output.write(
-                                '{"residue1": %i, "residue2": %i, "distance": %.2f}' % (
+                            values.append('{"residue1": %i, "residue2": %i, "distance": %.2f}' % (
                                     i+1, j+1, self.data[m][i][j]
-                                )
-                            )
-                            if j < n - 1:
-                                json_output.write(',')
+                            ))
+                json_output.write(",".join(values))
                 json_output.write(']')
                 if m < num_of_levels - 1:
                     json_output.write(',')
             json_output.write(']')
 
-
     def save_to_json(self):
         """
-        Write out the contents of the data into a CSV file
+        Write out the contents of the data into a JSON file after filtering
+        the data
 
         :return: None
         """
@@ -87,8 +78,13 @@ class Writer(object):
                     json_output.write(',')
             json_output.write(']')
 
-    def turn_to_zero(self, value):
+    @staticmethod
+    def turn_to_zero(value):
+        """
+        Simple method for filtering data
+        :param value: Number
+        :return: Number
+        """
         if value >= 21:
             return 0
         return value
-
