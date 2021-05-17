@@ -46,27 +46,37 @@ class Writer(object):
         """
         with open("%s_distogram.json" % self.id, "w") as json_output:
             json_output.write('[')
-
             num_of_levels = len(self.data)
             for m in range(num_of_levels):
-                json_output.write('[')
-                # The sub-matrixes have n x n dimensions
-                n = len(self.data[m])
-                values = []
-                for i in range(n):
-                    for j in range(n):
-                        # Only write out distance values <21
-                        # This is because the interactive data visualisation would break with too many data points
-                        # Luckily, values >21 are meaningless in terms of usability and so can be safely removed
-                        if self.data[m][i][j] < 21:
-                            values.append('{"residue1": %i, "residue2": %i, "distance": %.2f}' % (
-                                    i+1, j+1, self.data[m][i][j]
-                            ))
-                json_output.write(",".join(values))
-                json_output.write(']')
-                if m < num_of_levels - 1:
-                    json_output.write(',')
+                self.save_sub_tile(json_output, m, num_of_levels)
             json_output.write(']')
+
+    def save_sub_tile(self, json_output, m, num_of_levels):
+        """
+        Save an individual data tile from a tiled data array.
+
+        Only write out distance values <21
+        This is because the interactive data visualisation would break with too many data points
+        Luckily, values >21 are meaningless in terms of usability and so can be safely removed
+        :param json_output: Output file
+        :param m: Number
+        :param num_of_levels: Number
+        :return:
+        """
+        json_output.write('[')
+        # The sub-matrixes have n x n dimensions
+        n = len(self.data[m])
+        values = []
+        for i in range(n):
+            for j in range(n):
+                if self.data[m][i][j] < 21:
+                    values.append('{"residue1": %i, "residue2": %i, "distance": %.2f}' % (
+                        i + 1, j + 1, self.data[m][i][j]
+                    ))
+        json_output.write(",".join(values))
+        json_output.write(']')
+        if m < num_of_levels - 1:
+            json_output.write(',')
 
     def save_to_json(self):
         """
