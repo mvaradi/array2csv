@@ -20,6 +20,7 @@ if __name__ == "__main__":
         loader.load_file()
 
         # Save the data to CSV
-        writer = Writer(loader.get_data(), loader.get_identifier())
+        writer = Writer(loader.create_tiled_data(), loader.get_identifier())
         # writer.save_to_csv()
-        writer.save_to_json()
+        # writer.save_to_json()
+        writer.save_to_tiled_json()

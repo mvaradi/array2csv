@@ -130,7 +130,12 @@ if __name__ == "__main__":
     # print(x)
     # print()
     # print(loader.sum_submatrices(x, 2))
-    print(loader.data)
+    # print(loader.data)
+
+    tiled_data = loader.create_tiled_data()
+
+
+
     # print(loader.create_tiled_data())
 
 # x < 300 => nothing
