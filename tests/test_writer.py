@@ -13,7 +13,7 @@ class TestWriter(TestCase):
         """
         writer = Writer([0], "id")
         self.assertEqual(writer.turn_to_zero(19), 19)
-        self.assertEqual(writer.turn_to_zero(20), 0)
+        self.assertEqual(writer.turn_to_zero(20), 20)
         self.assertEqual(writer.turn_to_zero(21), 0)
 
     def test_save_to_csv(self):
@@ -44,25 +44,16 @@ class TestWriter(TestCase):
         data = json.load(tmp)
         tmp.close()
         expected = [
-            [
-                {
-                    "residue1": 1,
-                    "residue2": 1,
-                    "distance": 1.5
-                },
-                {
-                    "residue1": 2,
-                    "residue2": 1,
-                    "distance": 3.6
-                }
-            ],
-            [
-                {
-                    "residue1": 1,
-                    "residue2": 1,
-                    "distance": 1.9
-                }
-            ]
+            {
+                "residue1": [1,2],
+                "residue2": [1,1],
+                "distance": [1.5,3.6]
+            },
+            {
+                "residue1": [1],
+                "residue2": [1],
+                "distance": [1.9]
+            }
         ]
         self.assertEqual(data, expected)
         os.system("rm tmp_distogram_tiled.json")
@@ -79,18 +70,11 @@ class TestWriter(TestCase):
         data = json.load(tmp)
         tmp.close()
         expected = [
-            [
-                {
-                    "residue1": 1,
-                    "residue2": 1,
-                    "distance": 1.5
-                },
-                {
-                    "residue1": 2,
-                    "residue2": 1,
-                    "distance": 3.6
-                }
-            ]
+            {
+                "residue1": [1,2],
+                "residue2": [1,1],
+                "distance": [1.5, 3.6]
+            }
         ]
         self.assertEqual(data, expected)
         os.system("rm tmp_distogram.json")

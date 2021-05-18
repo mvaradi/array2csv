@@ -36,7 +36,7 @@ class Writer(object):
         :param writer: CSV writer
         :return: None
         """
-        if self.data[i][j] < 20:
+        if self.data[i][j] < 21:
             writer.writerow([i + 1, j + 1, "%.2f" % self.data[i][j]])
 
     def save_to_tiled_json(self):
@@ -52,7 +52,13 @@ class Writer(object):
             num_of_levels = len(self.data)
             for m in range(num_of_levels):
                 self.save_sub_tile(json_output, m, num_of_levels)
+                self.reset_arrays()
             json_output.write(']')
+
+    def reset_arrays(self):
+        self.residues1 = []
+        self.residues2 = []
+        self.distances = []
 
     def save_sub_tile(self, json_output, m, num_of_levels):
         """
@@ -66,24 +72,25 @@ class Writer(object):
         :param num_of_levels: Number
         :return:
         """
-        json_output.write('[')
+        json_output.write('{')
         # The sub-matrixes have n x n dimensions
         n = len(self.data[m])
-        values = []
+        # values = []
         for i in range(n):
             for j in range(n):
-                values = self.conditional_append(i, j, m, values)
-        json_output.write(",".join(values))
-        json_output.write(']')
+                self.conditional_append(i, j, m)
+        json_output.write('"residue1": [%s],' % ",".join(self.residues1))
+        json_output.write('"residue2": [%s],' % ",".join(self.residues2))
+        json_output.write('"distance": [%s]' % ",".join(self.distances))
+        json_output.write('}')
         if m < num_of_levels - 1:
             json_output.write(',')
 
-    def conditional_append(self, i, j, m, values):
+    def conditional_append(self, i, j, m):
         if self.data[m][i][j] < 21 and i >= j:
-            values.append('{"residue1": %i, "residue2": %i, "distance": %.2f}' % (
-                i + 1, j + 1, self.data[m][i][j]
-            ))
-        return values
+            self.residues1.append(str(i + 1))
+            self.residues2.append(str(j + 1))
+            self.distances.append(str(self.data[m][i][j]))
 
     def save_to_json(self):
         """
@@ -105,6 +112,6 @@ class Writer(object):
         :param value: Number
         :return: Number
         """
-        if value >= 20:
+        if value >= 21:
             return 0
         return value
