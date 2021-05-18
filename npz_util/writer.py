@@ -6,6 +6,9 @@ class Writer(object):
     def __init__(self, data, identifier):
         self.data = data
         self.id = identifier
+        self.residues1 = []
+        self.residues2 = []
+        self.distances = []
 
     def save_to_csv(self):
         """
@@ -76,7 +79,7 @@ class Writer(object):
             json_output.write(',')
 
     def conditional_append(self, i, j, m, values):
-        if self.data[m][i][j] < 21:
+        if self.data[m][i][j] < 21 and i >= j:
             values.append('{"residue1": %i, "residue2": %i, "distance": %.2f}' % (
                 i + 1, j + 1, self.data[m][i][j]
             ))
