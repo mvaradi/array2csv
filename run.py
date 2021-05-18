@@ -19,8 +19,13 @@ if __name__ == "__main__":
         loader = Loader(npz_file)
         loader.load_file()
 
-        # Save the data to CSV
-        writer = Writer(loader.create_tiled_data(), loader.get_identifier())
+        # Save as tiled JSON files
+        # writer = Writer(loader.create_tiled_data(), loader.get_identifier())
+        # writer.save_to_tiled_json()
+
+        # Save as JSON files
+        writer = Writer(loader.get_data(), loader.get_identifier())
+        writer.save_to_json()
+
+        # Save as CSV files
         # writer.save_to_csv()
-        # writer.save_to_json()
-        writer.save_to_tiled_json()

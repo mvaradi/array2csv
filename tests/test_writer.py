@@ -40,7 +40,7 @@ class TestWriter(TestCase):
         """
         writer = Writer([[[1.5, 21], [3.6, 22]],[[1.9, 24], [23, 22]]], "tmp")
         writer.save_to_tiled_json()
-        tmp = open("tmp_distogram.json")
+        tmp = open("tmp_distogram_tiled.json")
         data = json.load(tmp)
         tmp.close()
         expected = [
@@ -65,8 +65,8 @@ class TestWriter(TestCase):
             ]
         ]
         self.assertEqual(data, expected)
-        os.system("rm tmp_distogram.json")
-        os.system("del tmp_distogram.json")
+        os.system("rm tmp_distogram_tiled.json")
+        os.system("del tmp_distogram_tiled.json")
 
     def test_save_to_json(self):
         """
@@ -78,6 +78,20 @@ class TestWriter(TestCase):
         tmp = open("tmp_distogram.json")
         data = json.load(tmp)
         tmp.close()
-        self.assertEqual(data, [[1.5, 0], [3.6, 0]])
+        expected = [
+            [
+                {
+                    "residue1": 1,
+                    "residue2": 1,
+                    "distance": 1.5
+                },
+                {
+                    "residue1": 2,
+                    "residue2": 1,
+                    "distance": 3.6
+                }
+            ]
+        ]
+        self.assertEqual(data, expected)
         os.system("rm tmp_distogram.json")
         os.system("del tmp_distogram.json")

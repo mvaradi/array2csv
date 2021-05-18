@@ -38,7 +38,6 @@ class TestLoader(TestCase):
         loader = Loader('./tests/example.npz')
         loader.load_file()
         data_range = loader.get_range()
-        print(type(data_range[0]))
         self.assertEqual(np.float16(2.156), data_range[0])
         self.assertEqual(np.float16(21.94), data_range[1])
 
