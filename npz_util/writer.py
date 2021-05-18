@@ -31,6 +31,7 @@ class Writer(object):
         Only write out distance values <21
         This is because the interactive data visualisation would break with too many data points
         Luckily, values >21 are meaningless in terms of usability and so can be safely removed
+
         :param i: Number
         :param j: Number
         :param writer: CSV writer
@@ -56,6 +57,11 @@ class Writer(object):
             json_output.write(']')
 
     def reset_arrays(self):
+        """
+        Reset the arrays to empty
+
+        :return: None
+        """
         self.residues1 = []
         self.residues2 = []
         self.distances = []
@@ -64,9 +70,6 @@ class Writer(object):
         """
         Save an individual data tile from a tiled data array.
 
-        Only write out distance values <21
-        This is because the interactive data visualisation would break with too many data points
-        Luckily, values >21 are meaningless in terms of usability and so can be safely removed
         :param json_output: Output file
         :param m: Number
         :param num_of_levels: Number
@@ -87,6 +90,16 @@ class Writer(object):
             json_output.write(',')
 
     def conditional_append(self, i, j, m):
+        """
+        Only write out distance values <21
+        This is because the interactive data visualisation would break with too many data points
+        Luckily, values >21 are meaningless in terms of usability and so can be safely removed
+
+        :param i: Number
+        :param j: Number
+        :param m: Number
+        :return: None
+        """
         if self.data[m][i][j] < 21 and i >= j:
             self.residues1.append(str(i + 1))
             self.residues2.append(str(j + 1))
