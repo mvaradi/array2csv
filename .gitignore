@@ -1,7 +1,9 @@
 .idea*
 **/data
 **/analysis
+**/htmlcov
 .coverage
 .pytest_cache
 **/venv
 *.pyc
+*.json
