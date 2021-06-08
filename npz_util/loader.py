@@ -4,7 +4,7 @@ import numpy as np
 from numpy.lib.stride_tricks import as_strided
 
 
-class Loader(object):
+class Loader:
     """
     This class handles .npz data that has an embedded matrix-like object.
 
@@ -17,6 +17,9 @@ class Loader(object):
         self.path = path
         self.data = None
         self.tiled_data = None
+
+    def __repr__(self):
+        return f'{type(self).__name__}(path="{self.path}")'
 
     def load_file(self):
         """

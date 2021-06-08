@@ -1,7 +1,14 @@
 import csv
 
 
-class Writer(object):
+class Writer:
+    """
+    This class saves Numpy array-of-arrays data to various output formats:
+
+    * CSV
+    * JSON
+    * Tiled JSON
+    """
 
     def __init__(self, data, identifier):
         self.data = data
@@ -9,6 +16,9 @@ class Writer(object):
         self.residues1 = []
         self.residues2 = []
         self.distances = []
+
+    def __repr__(self):
+        return f"{type(self).__name__}(data={type(self.data)}, identifier={self.id})"
 
     def save_to_csv(self):
         """

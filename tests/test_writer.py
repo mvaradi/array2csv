@@ -79,3 +79,7 @@ class TestWriter(TestCase):
         self.assertEqual(data, expected)
         os.system("rm tmp_distogram.json")
         os.system("del tmp_distogram.json")
+
+    def test_repr(self):
+        w = Writer(data=[[1,2],[3,4]], identifier='foo')
+        self.assertEqual(str(w), "Writer(data=<class 'list'>, identifier=foo)")

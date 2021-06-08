@@ -84,3 +84,7 @@ class TestLoader(TestCase):
                                 [1, 3, 3],
                                 [2, 3, 3]]]])
         self.assertEqual(loader.sum_sub_matrices(loader.data, 3).all(), np.asarray([4, 2]).all())
+
+    def test_repr(self):
+        l = Loader('path/to/data')
+        self.assertEqual(str(l), 'Loader(path="path/to/data")')
